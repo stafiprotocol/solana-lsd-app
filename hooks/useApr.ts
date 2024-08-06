@@ -4,7 +4,7 @@ import { useAppSelector } from "./common";
 export function useApr() {
   const { apr } = useAppSelector((state: RootState) => {
     return {
-      apr: state.lsdEth.apr,
+      apr: state.lst.apr,
     };
   });
 

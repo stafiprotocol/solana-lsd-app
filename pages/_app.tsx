@@ -1,11 +1,12 @@
 import { Fade, ThemeProvider, styled } from "@mui/material";
 import {
-  QueryClientProvider,
-  useQueryClient,
-  QueryClient,
-} from "@tanstack/react-query";
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Layout } from "components/layout/Layout";
-import { wagmiConfig } from "config/wagmi";
+import { solanaRestEndpoint, solanaWsEndpoint } from "config";
 import { useAppSlice } from "hooks/selector";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
@@ -14,9 +15,9 @@ import { ReactElement, ReactNode, useEffect, useMemo } from "react";
 import { Provider } from "react-redux";
 import { store } from "redux/store";
 import "styles/globals.css";
+import "@solana/wallet-adapter-react-ui/styles.css";
 import { theme } from "styles/material-ui-theme";
 import { SnackbarUtilsConfigurator } from "utils/snackbarUtils";
-import { WagmiConfig } from "wagmi";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -101,12 +102,22 @@ const MyAppWrapper = ({ Component, pageProps }: any) => {
           warning: StyledMaterialDesignContent,
         }}
       >
-        <WagmiConfig config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
-            <SnackbarUtilsConfigurator />
-            <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
-          </QueryClientProvider>
-        </WagmiConfig>
+        <QueryClientProvider client={queryClient}>
+          <ConnectionProvider
+            endpoint={solanaRestEndpoint}
+            config={{
+              wsEndpoint: solanaWsEndpoint,
+            }}
+          >
+            <WalletProvider wallets={[]} autoConnect>
+              <WalletModalProvider>
+                <SnackbarUtilsConfigurator />
+
+                <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+              </WalletModalProvider>
+            </WalletProvider>
+          </ConnectionProvider>
+        </QueryClientProvider>
       </SnackbarProvider>
     </ThemeProvider>
   );

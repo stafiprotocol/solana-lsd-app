@@ -15,7 +15,7 @@ import {
 import { handleLsdEthUnstake } from "redux/reducers/EthSlice";
 import { RootState } from "redux/store";
 import {
-  getLsdEthName,
+  getLsdTokenName,
   getTokenName,
   getUnstakeDuration,
 } from "utils/configUtils";
@@ -40,12 +40,12 @@ export const UnstakeLoadingModal = () => {
       : unstakeLoadingParams?.status === "success"
       ? `Your new balance is ${formatNumber(
           unstakeLoadingParams?.newLsdTokenBalance
-        )} ${getLsdEthName()}`
+        )} ${getLsdTokenName()}`
       : unstakeLoadingParams?.status === "error"
       ? "Unstake Failed"
       : `You are now unstaking ${Number(
           unstakeLoadingParams?.amount
-        )} ${getLsdEthName()}`;
+        )} ${getLsdTokenName()}`;
   }, [unstakeLoadingParams]);
 
   const secondaryMsg = useMemo(() => {
@@ -58,7 +58,7 @@ export const UnstakeLoadingModal = () => {
         "Something went wrong, please try again"
       : `Unstake ${
           unstakeLoadingParams?.amount
-        } ${getLsdEthName()}, you will receive ${formatNumber(
+        } ${getLsdTokenName()}, you will receive ${formatNumber(
           unstakeLoadingParams?.willReceiveAmount
         )} ${getTokenName()}`;
   }, [unstakeLoadingParams]);
@@ -205,7 +205,7 @@ export const UnstakeLoadingModal = () => {
 
             {unstakeLoadingParams?.status === "error" && (
               <div
-                className="text-color-link text-[.24rem] cursor-pointer"
+                className="text-color-link text-[.24rem] cursor-pointer hidden"
                 onClick={clickRetry}
               >
                 Retry

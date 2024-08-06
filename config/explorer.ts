@@ -1,22 +1,16 @@
-import { getExplorerUrl, isDev } from "./env";
+import { solanaExplorer } from "config";
+import { isDev } from "./env";
 
-export function getEtherScanTxUrl(txHash: string | undefined) {
+export function getSolanaScanTxUrl(txHash: string | undefined) {
   if (isDev()) {
-    return `${getExplorerUrl()}/tx/${txHash}`;
+    return `${solanaExplorer}/tx/${txHash}?cluster=custom&customUrl=https%3A%2F%2Fsolana-dev-rpc.stafi.io`;
   }
-  return `${getExplorerUrl()}/tx/${txHash}`;
+  return `${solanaExplorer}/tx/${txHash}`;
 }
 
-export function getEtherScanAccountUrl(account: string) {
+export function getSolanaScanAccountUrl(account: string | undefined) {
   if (isDev()) {
-    return `${getExplorerUrl()}/address/${account}`;
+    return `${solanaExplorer}/address/${account}?cluster=custom&customUrl=https%3A%2F%2Fsolana-dev-rpc.stafi.io`;
   }
-  return `${getExplorerUrl()}/address/${account}`;
-}
-
-export function getEtherScanErc20TxUrl(address: any) {
-  if (isDev()) {
-    return `${getExplorerUrl()}/address/${address}#tokentxns`;
-  }
-  return `${getExplorerUrl()}/address/${address}#tokentxns`;
+  return `${solanaExplorer}/address/${account}`;
 }

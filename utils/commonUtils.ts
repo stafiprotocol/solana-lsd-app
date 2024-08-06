@@ -1,3 +1,10 @@
+import {
+  CANCELLED_ERR_MESSAGE1,
+  CANCELLED_ERR_MESSAGE2,
+  CANCELLED_ERR_MESSAGE3,
+  CANCELLED_ERR_MESSAGE4,
+} from "constants/common";
+
 /**
  * create uuid
  * @returns uuid
@@ -32,3 +39,16 @@ export function openLink(url: string | undefined | null) {
     otherWindow.location = url;
   }
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export const isSolanaCancelError = (err: any) => {
+  return (
+    err.message.indexOf(CANCELLED_ERR_MESSAGE1) >= 0 ||
+    err.message.indexOf(CANCELLED_ERR_MESSAGE2) >= 0 ||
+    err.message.indexOf(CANCELLED_ERR_MESSAGE3) >= 0 ||
+    err.message.indexOf(CANCELLED_ERR_MESSAGE4) >= 0
+  );
+};

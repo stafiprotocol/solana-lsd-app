@@ -1,13 +1,12 @@
 {
-  "appTitle": "ETH LSD App",
-  "chainIcon": "/images/chain/ethereum.png",
+  "appTitle": "Solana LSD App",
+  "chainIcon": "/images/chain/solana.svg",
   "token": {
-    "tokenName": "ETH",
-    "lsdTokenName": "rETH",
-    "supportChains": ["Ethereum", "Arbitrum", "Optimism", "Polygon"],
-    "lsdTokenIconUri": "https://cdn.stafi.io/rtoken/logo/rETH.png",
-    "tokenIcon": "/images/token/ETH.svg",
-    "lsdTokenIcon": "/images/token/rETH.svg"
+    "tokenName": "SOL",
+    "lsdTokenName": "rSOL",
+    "supportChains": ["Solana"],
+    "tokenIcon": "/images/token/SOL.svg",
+    "lsdTokenIcon": "/images/token/rSOL.svg"
   },
   "unstake": {
     "lockTipLink": "https://docs.stafi.io/stakingeth/unstake/",
@@ -62,20 +61,20 @@
       ]
     },
     {
-      "title": "How much time is needed for ETH withdrawals?",
+      "title": "How much time is needed for SOL withdrawals?",
       "contents": [
         {
           "type": "text",
-          "content": "If the unstaking pool's ETH balance exceeds your withdrawal amount, you will instantly receive your ETH upon transaction approval.\n"
+          "content": "If the unstaking pool's SOL balance exceeds your withdrawal amount, you will instantly receive your SOL upon transaction approval.\n"
         },
         {
           "type": "text",
-          "content": "However, if the unstaking pool's ETH balance is less than your withdrawal amount, the withdrawal process will take 1-5 days. After this period, you can claim your ETH using the withdraw function.\n"
+          "content": "However, if the unstaking pool's SOL balance is less than your withdrawal amount, the withdrawal process will take 1-5 days. After this period, you can claim your SOL using the withdraw function.\n"
         }
       ]
     },
     {
-      "title": "What's the exchange rate of rETH?",
+      "title": "What's the exchange rate of rSOL?",
       "contents": [
         {
           "type": "text",
@@ -107,7 +106,7 @@
       "link": "https://dune.com/stafi-analysis/stafi"
     },
     {
-      "name": "rETH Listing",
+      "name": "rSOL Listing",
       "link": "https://docs.stafi.io/"
     }
   ],
@@ -129,5 +128,5 @@
       "link": "https://t.me/stafi_protocol"
     }
   ],
-  "tokenPriceUrl": "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+  "tokenPriceUrl": "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
 }

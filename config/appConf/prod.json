@@ -1,23 +1,11 @@
 {
-  "chain": {
-    "id": 1,
-    "name": "Ethereum"
+  "programs": {
+    "lsdProgramId": "8ufkkVBM6s52WRnhdF2yUCu1eNPnS123SoVKv8wyBFAp",
+    "stackProgramId": "2gC8NuySDmRF7bjqnnJb9gJYSU4rtwNXqDShYbcgrCBF",
+    "stakeManagerProgramId": "8hYPonc8irWrqxDSks42LBUJYJe4Qsi6RDVkPd9WUUbU",
+    "lsdTokenMint": "A218tGrF8fw2LTwvZbvDE5Miviaq7bMMYEYhnerxdYqv"
   },
-  "rpc": "https://mainnet.infura.io/v3/b3611f564322439ab2491e04ddd55b39",
-  "explorer": "https://etherscan.io",
-  "blockSeconds": 12,
-  "contracts": {
-    "lsdTokenContract": {
-      "address": "0x9559aaa82d9649c7a7b220e7c461d2e74c9a3593"
-    },
-    "depositContract": {
-      "address": "0x70C5744d377aE6E9926CcBCF19D501340CB26285"
-    },
-    "withdrawContract": {
-      "address": "0xE773dbe9d073dBEfdC147fbdCCB06dBD4f5AAF54"
-    },
-    "networkBalanceContract": {
-      "address": "0xda9726Fd1B125a3923f9D9521e28fE888091698d"
-    }
-  }
+  "explorer": "https://explorer.solana.com",
+  "restEndpoint": "https://solana-dev-rpc.stafi.io",
+  "wsEndpoint": "wss://solana-dev-wss.stafi.io"
 }

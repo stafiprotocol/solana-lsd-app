@@ -1,10 +1,11 @@
 import { Popover } from "@mui/material";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import classNames from "classnames";
 import { CustomButton } from "components/common/CustomButton";
 import { NoticeDrawer } from "components/drawer/NoticeDrawer";
 import { SettingsDrawer } from "components/drawer/SettingsDrawer";
 import { Icomoon } from "components/icon/Icomoon";
-import { getEthereumChainId, getEthereumChainName } from "config/env";
 import { useAppDispatch, useAppSelector } from "hooks/common";
 import { useAppSlice } from "hooks/selector";
 import { useWalletAccount } from "hooks/useWalletAccount";
@@ -18,15 +19,11 @@ import auditIcon from "public/images/audit.svg";
 import defaultAvatar from "public/images/default_avatar.png";
 import noticeIcon from "public/images/notice.png";
 import { useEffect, useMemo, useState } from "react";
-import {
-  disconnectWallet,
-  setMetaMaskDisconnected,
-} from "redux/reducers/WalletSlice";
+import { disconnectWallet } from "redux/reducers/WalletSlice";
 import { RootState } from "redux/store";
 import { getAuditList } from "utils/configUtils";
 import { getChainIcon } from "utils/iconUtils";
 import { getShortAddress } from "utils/stringUtils";
-import { useConnect, useSwitchNetwork } from "wagmi";
 
 const Navbar = () => {
   const { unreadNoticeFlag } = useAppSlice();
@@ -37,7 +34,7 @@ const Navbar = () => {
   const [pageWidth, setPageWidth] = useState(
     document.documentElement.clientWidth
   );
-  const { metaMaskAccount } = useWalletAccount();
+  const { publicKey } = useWallet();
 
   const resizeListener = () => {
     const clientW = document.documentElement.clientWidth;
@@ -69,7 +66,7 @@ const Navbar = () => {
 
         <div className={classNames("flex items-center")}>
           <div className={classNames("ml-[.16rem]")}>
-            {metaMaskAccount ? (
+            {publicKey ? (
               <UserInfo auditExpand={auditExpand} />
             ) : (
               <ConnectButton />
@@ -126,7 +123,8 @@ const Navbar = () => {
 const UserInfo = (props: { auditExpand: boolean }) => {
   const { auditExpand } = props;
   const dispatch = useAppDispatch();
-  const { metaMaskAccount } = useWalletAccount();
+  const { publicKey } = useWallet();
+
   const { darkMode } = useAppSelector((state: RootState) => {
     return {
       darkMode: state.app.darkMode,
@@ -162,7 +160,7 @@ const UserInfo = (props: { auditExpand: boolean }) => {
         <div
           className={classNames("ml-[.08rem] text-[.16rem] text-color-text1")}
         >
-          {getEthereumChainName()}
+          Solana
         </div>
 
         {/* <div className="ml-[.12rem]">
@@ -200,7 +198,7 @@ const UserInfo = (props: { auditExpand: boolean }) => {
               addressPopupState.isOpen ? "text-text1 " : "text-color-text1"
             )}
           >
-            {getShortAddress(metaMaskAccount, 5)}
+            {getShortAddress(publicKey?.toString(), 5)}
           </div>
         )}
       </div>
@@ -241,9 +239,11 @@ const UserInfo = (props: { auditExpand: boolean }) => {
           <div
             className="cursor-pointer flex items-center justify-between"
             onClick={() => {
-              navigator.clipboard.writeText(metaMaskAccount || "").then(() => {
-                addressPopupState.close();
-              });
+              navigator.clipboard
+                .writeText(publicKey?.toString() || "")
+                .then(() => {
+                  addressPopupState.close();
+                });
             }}
           >
             <div className="flex items-center">
@@ -273,35 +273,13 @@ const UserInfo = (props: { auditExpand: boolean }) => {
 };
 
 const ConnectButton = () => {
-  const dispatch = useAppDispatch();
-  const { metaMaskChainId } = useWalletAccount();
-  const { switchNetworkAsync } = useSwitchNetwork();
-  const { connectAsync, connectors } = useConnect();
-
-  const isWrongMetaMaskNetwork = useMemo(() => {
-    return Number(metaMaskChainId) !== getEthereumChainId();
-  }, [metaMaskChainId]);
+  const walletModal = useWalletModal();
 
   const clickConnectWallet = async () => {
-    if (isWrongMetaMaskNetwork) {
-      await (switchNetworkAsync && switchNetworkAsync(getEthereumChainId()));
-    }
-
-    const metamaskConnector = connectors.find((c) => c.name === "MetaMask");
-    if (!metamaskConnector) {
-      return;
-    }
     try {
-      dispatch(setMetaMaskDisconnected(false));
-      await connectAsync({
-        chainId: getEthereumChainId(),
-        connector: metamaskConnector,
-      });
+      walletModal.setVisible(true);
     } catch (err: any) {
-      if (err.code === 4001) {
-      } else {
-        console.error(err);
-      }
+      console.error(err);
     }
   };
 
@@ -328,13 +306,13 @@ interface AuditComponentProps {
 const AuditComponent = (props: AuditComponentProps) => {
   const { expand, onExpandChange } = props;
   const { darkMode } = useAppSlice();
-  const { metaMaskAccount } = useWalletAccount();
+  const { publicKey } = useWallet();
 
   useEffect(() => {
-    if (metaMaskAccount) {
+    if (publicKey?.toString()) {
       onExpandChange(false);
     }
-  }, [metaMaskAccount, onExpandChange]);
+  }, [publicKey?.toString(), onExpandChange]);
 
   return (
     <div

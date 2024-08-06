@@ -30,3 +30,11 @@ export const LOADING_MESSAGE_WITHDRAW_ERROR =
   "Withdraw error, please try again later";
 export const LOADING_MESSAGE_APPROVE_PHANTOM_CREATE_TOKEN =
   "Please approve create token account request in Phantom wallet";
+
+export const CANCELLED_ERR_MESSAGE1 = "User rejected the transaction";
+export const CANCELLED_ERR_MESSAGE2 = "User rejected the request";
+export const CANCELLED_ERR_MESSAGE3 =
+  "Cannot read properties of undefined (reading 'symbol')";
+export const CANCELLED_ERR_MESSAGE4 = "user rejected transaction";
+
+export const DEFAULT_TX_FEE = "0.0001";

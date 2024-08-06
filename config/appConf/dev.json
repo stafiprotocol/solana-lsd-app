@@ -1,23 +1,11 @@
 {
-  "chain": {
-    "id": 17000,
-    "name": "Holesky"
+  "programs": {
+    "lsdProgramId": "8ufkkVBM6s52WRnhdF2yUCu1eNPnS123SoVKv8wyBFAp",
+    "stackProgramId": "2gC8NuySDmRF7bjqnnJb9gJYSU4rtwNXqDShYbcgrCBF",
+    "stakeManagerProgramId": "44agU7vrDhWnp7AEBKTBmzDYNKMASh7H2QFfwrgjbAbE",
+    "lsdTokenMint": "4KTgJEjxwsCvs8WDVtzMcj9Gpn8fDTohrTyCSPoVgXsc"
   },
-  "rpc": "https://rpc-holesky.rockx.com",
-  "explorer": "https://holesky.etherscan.io",
-  "blockSeconds": 12,
-  "contracts": {
-    "lsdTokenContract": {
-      "address": "0x85F7c01009B1bf540699C4FDDf3589DDE60BCb14"
-    },
-    "depositContract": {
-      "address": "0x044E54D0Fd299917eC9f5cb27B35Ce252D546A2b"
-    },
-    "withdrawContract": {
-      "address": "0x3CB60643B531632A243dA103f3d0A860eB49EEFC"
-    },
-    "networkBalanceContract": {
-      "address": "0xbfa824c78AC83c09dBF33Fcf6bf8116496189F28"
-    }
-  }
+  "explorer": "https://explorer.solana.com",
+  "restEndpoint": "https://solana-dev-rpc.stafi.io",
+  "wsEndpoint": "wss://solana-dev-wss.stafi.io"
 }

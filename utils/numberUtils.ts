@@ -92,7 +92,7 @@ export function chainAmountToHuman(num: string | number) {
   if (num === "" || num === undefined || num === null || isNaN(Number(num))) {
     return "--";
   }
-  const factor = "1000000000000000000";
+  const factor = "1000000000";
 
   return Number(num) / Number(factor) + "";
 }

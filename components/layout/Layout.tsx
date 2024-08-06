@@ -15,6 +15,7 @@ import { StakeLoadingSidebar } from "components/modal/StakeLoadingSidebar";
 import { UnstakeLoadingSidebar } from "components/modal/UnstakeLoadingSidebar";
 import { WithdrawLoadingSidebar } from "components/modal/WithdrawLoadingSidebar";
 import { getAppTitle } from "utils/configUtils";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 const Navbar = dynamic(() => import("./Navbar"), { ssr: false });
 
@@ -30,6 +31,7 @@ export const Layout = (props: React.PropsWithChildren) => {
   useInit();
 
   const { darkMode } = useAppSlice();
+  const walletModal = useWalletModal();
 
   const [navigation, setNavigation] = useState<NavigationItem[]>([]);
 
@@ -55,7 +57,10 @@ export const Layout = (props: React.PropsWithChildren) => {
             position="fixed"
             color="transparent"
             elevation={0}
-            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            sx={{
+              zIndex: (theme) =>
+                walletModal.visible ? 0 : theme.zIndex.drawer + 1,
+            }}
           >
             <Navbar />
           </AppBar>

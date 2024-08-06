@@ -15,7 +15,7 @@ import { handleEthStake } from "redux/reducers/EthSlice";
 import { RootState } from "redux/store";
 import { formatNumber } from "utils/numberUtils";
 import { roboto } from "config/font";
-import { getLsdEthName, getTokenName } from "utils/configUtils";
+import { getLsdTokenName, getTokenName } from "utils/configUtils";
 
 export const StakeLoadingModal = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +35,7 @@ export const StakeLoadingModal = () => {
       : stakeLoadingParams?.status === "success"
       ? `Your new balance is ${formatNumber(
           stakeLoadingParams?.newLsdTokenBalance
-        )} ${getLsdEthName()}`
+        )} ${getLsdTokenName()}`
       : stakeLoadingParams?.status === "error"
       ? "Transaction Failed"
       : `You are now staking ${stakeLoadingParams?.amount} ${getTokenName()}`;
@@ -55,7 +55,7 @@ export const StakeLoadingModal = () => {
         } ${getTokenName()}, you will receive ${formatNumber(
           stakeLoadingParams?.willReceiveAmount
         )} 
-  ${getLsdEthName()}`;
+  ${getLsdTokenName()}`;
   }, [stakeLoadingParams]);
 
   const closeModal = () => {
@@ -164,7 +164,7 @@ export const StakeLoadingModal = () => {
 
           {stakeLoadingParams?.status === "error" ? (
             <div
-              className="mb-[.32rem] text-color-link text-[.16rem] cursor-pointer"
+              className="mb-[.32rem] text-color-link text-[.16rem] cursor-pointer hidden"
               onClick={clickRetry}
             >
               Retry

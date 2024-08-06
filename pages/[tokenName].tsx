@@ -1,42 +1,40 @@
+import { useWallet } from "@solana/wallet-adapter-react";
 import classNames from "classnames";
 import { CustomTag } from "components/common/CustomTag";
 import { FaqItem } from "components/common/FaqItem";
 import { PageTitleContainer } from "components/common/PageTitleContainer";
-import { DashboardTabs } from "components/staking/DashboardTabs";
-import { WithdrawUnstaked } from "components/staking/WithdrawUnstaked";
 import { Icomoon } from "components/icon/Icomoon";
-import {
-  getEthDepositContract,
-  getEthWithdrawContract,
-  getLsdEthTokenContract,
-} from "config/contract";
-import { getEtherScanAccountUrl } from "config/explorer";
+import { DashboardTabs } from "components/staking/DashboardTabs";
+import { StakePage } from "components/staking/StakePage";
+import { WithdrawUnstaked } from "components/staking/WithdrawUnstaked";
+import { solanaPrograms } from "config";
+import { getSolanaScanAccountUrl } from "config/explorer";
+import { useApr } from "hooks/useApr";
+import { useBalance } from "hooks/useBalance";
+import { useLsdApr } from "hooks/useLsdApr";
+import { useLsdEthRate } from "hooks/useLsdEthRate";
 import { useEthUnclaimedWithdrawls } from "hooks/useUnclaimedWithdrawals";
+import { useWalletAccount } from "hooks/useWalletAccount";
+import { GetStaticProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import auditIcon from "public/images/audit.svg";
 import cooperationIcon from "public/images/cooperation.svg";
 import { useMemo } from "react";
 import { openLink } from "utils/commonUtils";
-import { formatNumber } from "utils/numberUtils";
-import { addLsdEthToMetaMask } from "utils/web3Utils";
-import { getLsdTokenIcon } from "utils/iconUtils";
 import {
+  IFaqContent,
   IFaqItem,
   getDetailInfoAudit,
   getDetailInfoListedIns,
   getFaqList,
-  getLsdEthName,
+  getLsdTokenName,
   getSupportChains,
-  IFaqContent,
   getTokenName,
 } from "utils/configUtils";
-import { StakePage } from "components/staking/StakePage";
-import { useBalance } from "hooks/useBalance";
-import { useLsdEthRate } from "hooks/useLsdEthRate";
-import { useWalletAccount } from "hooks/useWalletAccount";
-import { useApr } from "hooks/useApr";
-import { GetStaticProps } from "next";
+import { getLsdTokenIcon } from "utils/iconUtils";
+import { formatNumber } from "utils/numberUtils";
+import { addLsdEthToMetaMask } from "utils/web3Utils";
 
 export async function getStaticPaths() {
   return {
@@ -49,18 +47,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return { props: {} };
 };
 
-const ETHPage = () => {
+const SolPage = () => {
   const router = useRouter();
-  const { apr } = useApr();
+  const apr = useLsdApr();
 
-  const {
-    overallAmount,
-    claimableAmount,
-    claimableWithdrawals,
-    willReceiveAmount,
-  } = useEthUnclaimedWithdrawls();
+  const withdrawInfo = useEthUnclaimedWithdrawls();
 
-  const { metaMaskAccount } = useWalletAccount();
+  const { publicKey } = useWallet();
+
+  useEthUnclaimedWithdrawls();
 
   const { lsdBalance } = useBalance();
   const rate = useLsdEthRate();
@@ -88,12 +83,13 @@ const ETHPage = () => {
   }, [router.query]);
 
   const showWithdrawTab = useMemo(() => {
+    const overallAmount = withdrawInfo?.overallAmount;
     return (
       !!overallAmount &&
       !isNaN(Number(overallAmount)) &&
       Number(overallAmount) > 0
     );
-  }, [overallAmount]);
+  }, [withdrawInfo]);
 
   const updateTab = (tab: string) => {
     router.replace({
@@ -165,13 +161,13 @@ const ETHPage = () => {
           <div className="ml-[.12rem]">
             <div className="flex items-center">
               <div className="text-[.34rem] font-[700] text-color-text1">
-                {getLsdEthName()}
+                {getLsdTokenName()}
               </div>
 
               <div className="ml-[.16rem]">
                 <CustomTag type="stroke">
                   <div className="text-[.16rem] scale-75 origin-center">
-                    ERC20
+                    SPL20
                   </div>
                 </CustomTag>
               </div>
@@ -186,21 +182,6 @@ const ETHPage = () => {
                   </div>
                 </CustomTag>
               </div>
-
-              <div
-                className="ml-[.24rem] flex items-center cursor-pointer"
-                onClick={() => {
-                  addLsdEthToMetaMask();
-                }}
-              >
-                <div className="text-color-link text-[.14rem]">
-                  Add {getLsdEthName()} to Wallet
-                </div>
-
-                <span className="ml-[.06rem] flex items-center">
-                  <Icomoon icon="share" size=".12rem" />
-                </span>
-              </div>
             </div>
 
             <div className="mt-[.04rem] text-color-text2 text-[.16rem] scale-75 origin-bottom-left">
@@ -209,7 +190,7 @@ const ETHPage = () => {
             </div>
           </div>
 
-          {metaMaskAccount && (
+          {publicKey && (
             <div className="ml-auto mr-[.56rem] flex flex-col justify-center items-end">
               <div className="text-[.34rem] font-[700] text-color-text1">
                 {formatNumber(lsdBalance)}
@@ -240,10 +221,9 @@ const ETHPage = () => {
 
               {selectedTab === "withdraw" && (
                 <WithdrawUnstaked
-                  overallAmount={overallAmount}
-                  willReceiveAmount={willReceiveAmount}
-                  claimableAmount={claimableAmount}
-                  claimableWithdrawals={claimableWithdrawals}
+                  overallAmount={withdrawInfo?.overallAmount}
+                  claimableAmount={withdrawInfo?.claimableAmount}
+                  remainingTime={withdrawInfo?.remainingTime}
                 />
               )}
             </div>
@@ -309,17 +289,21 @@ const ETHPage = () => {
 
               <div className="mt-[.16rem] bg-color-bg3 rounded-[.12rem] py-[.16rem] px-[.24rem] text-[.14rem]">
                 <div className="text-color-text1 font-[700]">
-                  {getLsdEthName()} Token Contract Address
+                  Stake Manager Address
                 </div>
 
                 <div
                   className="cursor-pointer mt-[.12rem] text-color-link flex items-center"
                   onClick={() => {
-                    openLink(getEtherScanAccountUrl(getLsdEthTokenContract()));
+                    openLink(
+                      getSolanaScanAccountUrl(
+                        solanaPrograms.stakeManagerProgramId
+                      )
+                    );
                   }}
                 >
                   <span className="mr-[.12rem] flex-1 break-all leading-normal dark:text-linkDark/50">
-                    {getLsdEthTokenContract()}
+                    {solanaPrograms.stakeManagerProgramId}
                   </span>
 
                   <div className="min-w-[.12rem]">
@@ -328,36 +312,19 @@ const ETHPage = () => {
                 </div>
 
                 <div className="mt-[.16rem] text-color-text1 font-[700]">
-                  {getLsdEthName()} Deposit Contract Address
+                  Lsd Token Address
                 </div>
 
                 <div
                   className="cursor-pointer mt-[.12rem] text-color-link flex items-center"
                   onClick={() => {
-                    openLink(getEtherScanAccountUrl(getEthDepositContract()));
+                    openLink(
+                      getSolanaScanAccountUrl(solanaPrograms.lsdTokenMint)
+                    );
                   }}
                 >
                   <span className="mr-[.12rem] flex-1 break-all leading-normal dark:text-linkDark/50">
-                    {getEthDepositContract()}
-                  </span>
-
-                  <div className="min-w-[.12rem]">
-                    <Icomoon icon="share" size=".12rem" />
-                  </div>
-                </div>
-
-                <div className="mt-[.16rem] text-color-text1 font-[700]">
-                  {getLsdEthName()} Withdraw Contract Address
-                </div>
-
-                <div
-                  className="cursor-pointer mt-[.12rem] text-color-link flex items-center"
-                  onClick={() => {
-                    openLink(getEtherScanAccountUrl(getEthWithdrawContract()));
-                  }}
-                >
-                  <span className="mr-[.12rem] flex-1 break-all leading-normal dark:text-linkDark/50">
-                    {getEthWithdrawContract()}
+                    {solanaPrograms.lsdTokenMint}
                   </span>
 
                   <div className="min-w-[.12rem]">
@@ -366,7 +333,7 @@ const ETHPage = () => {
                 </div>
 
                 <div className="mt-[.16rem] text-color-text1 font-[700] hidden">
-                  {getLsdEthName()} Onchain Exchange Rate Source
+                  {getLsdTokenName()} Onchain Exchange Rate Source
                 </div>
 
                 <div className="mt-[.12rem] text-color-link hidden items-center">
@@ -406,4 +373,4 @@ const ETHPage = () => {
   );
 };
 
-export default ETHPage;
+export default SolPage;

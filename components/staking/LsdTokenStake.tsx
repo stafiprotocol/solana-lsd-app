@@ -1,52 +1,54 @@
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import classNames from "classnames";
 import { Icomoon } from "components/icon/Icomoon";
-import { getEthereumChainId, getEthereumChainName } from "config/env";
+import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "hooks/common";
 import { useAppSlice } from "hooks/selector";
+import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
 import { useApr } from "hooks/useApr";
 import { useBalance } from "hooks/useBalance";
-import { useGasPrice } from "hooks/useGasPrice";
+import { useDepositEnabled } from "hooks/useDepositEnabled";
 import { useLsdEthRate } from "hooks/useLsdEthRate";
 import { useMinimumStakeLimit } from "hooks/useMinimumStakeLimit";
 import { usePrice } from "hooks/usePrice";
-import { useWalletAccount } from "hooks/useWalletAccount";
 import { bindPopover } from "material-ui-popup-state";
 import HoverPopover from "material-ui-popup-state/HoverPopover";
 import { bindHover, usePopupState } from "material-ui-popup-state/hooks";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { handleEthStake, updateEthBalance } from "redux/reducers/EthSlice";
-import { updateLsdEthBalance } from "redux/reducers/LsdEthSlice";
+import { setUpdateFlag } from "redux/reducers/AppSlice";
+import { updateLsdEthBalance } from "redux/reducers/LstSlice";
+import { handleTokenStake } from "redux/reducers/TokenSlice";
 import { RootState } from "redux/store";
-import { getLsdEthName, getTokenName } from "utils/configUtils";
+import { getLsdTokenName, getTokenName } from "utils/configUtils";
 import { getTokenIcon } from "utils/iconUtils";
 import { formatLargeAmount, formatNumber } from "utils/numberUtils";
-import { useConnect, useSwitchNetwork } from "wagmi";
 import Web3 from "web3";
 import { CustomButton } from "../common/CustomButton";
 import { CustomNumberInput } from "../common/CustomNumberInput";
 import { DataLoading } from "../common/DataLoading";
-import { useDepositEnabled } from "hooks/useDepositEnabled";
-import { setMetaMaskDisconnected } from "redux/reducers/WalletSlice";
+import { useLsdApr } from "hooks/useLsdApr";
+import { DEFAULT_TX_FEE } from "constants/common";
 
 export const LsdTokenStake = () => {
   const dispatch = useAppDispatch();
-  const { switchNetworkAsync } = useSwitchNetwork();
-  const { connectAsync, connectors } = useConnect();
   const { darkMode } = useAppSlice();
   const { ethPrice } = usePrice();
-  const { gasPrice } = useGasPrice();
   const lsdEthRate = useLsdEthRate();
 
   const { lsdBalance } = useBalance();
-  const { apr } = useApr();
+  const apr = useLsdApr();
   const [stakeAmount, setStakeAmount] = useState("");
-  const { metaMaskChainId, metaMaskAccount } = useWalletAccount();
 
   const { minimumDeposit: ethMinimumDeposit } = useMinimumStakeLimit();
   const { depositEnabled } = useDepositEnabled();
 
+  const { publicKey, sendTransaction } = useWallet();
+  const walletModal = useWalletModal();
   const { balance } = useBalance();
+  const { connection } = useConnection();
+  const anchorProgram = useAnchorLsdProgram();
 
   const { stakeLoading } = useAppSelector((state: RootState) => {
     return {
@@ -55,12 +57,8 @@ export const LsdTokenStake = () => {
   });
 
   const walletNotConnected = useMemo(() => {
-    return !metaMaskAccount;
-  }, [metaMaskAccount]);
-
-  const isWrongMetaMaskNetwork = useMemo(() => {
-    return Number(metaMaskChainId) !== getEthereumChainId();
-  }, [metaMaskChainId]);
+    return !publicKey?.toString();
+  }, [publicKey]);
 
   const stakeValue = useMemo(() => {
     if (
@@ -85,45 +83,21 @@ export const LsdTokenStake = () => {
     return Number(stakeAmount) / Number(lsdEthRate) + "";
   }, [stakeAmount, lsdEthRate]);
 
-  const estimateFee = useMemo(() => {
-    let gasLimit = 146316;
-
-    if (isNaN(gasPrice)) {
-      return "--";
-    }
-
-    return Web3.utils.fromWei(
-      Web3.utils.toBN(gasLimit).mul(Web3.utils.toBN(gasPrice))
-    );
-  }, [gasPrice]);
-
-  const transactionCost = useMemo(() => {
-    if (isNaN(Number(estimateFee))) {
-      return "--";
-    }
-    return Number(estimateFee) + "";
-  }, [estimateFee]);
+  const txFee = DEFAULT_TX_FEE;
 
   const transactionCostValue = useMemo(() => {
-    if (isNaN(Number(transactionCost)) || isNaN(Number(ethPrice))) {
+    if (isNaN(Number(txFee)) || isNaN(Number(ethPrice))) {
       return "--";
     }
-    return Number(transactionCost) * Number(ethPrice) + "";
-  }, [transactionCost, ethPrice]);
+    return Number(txFee) * Number(ethPrice) + "";
+  }, [txFee, ethPrice]);
 
   const [buttonDisabled, buttonText, isButtonSecondary] = useMemo(() => {
     if (!depositEnabled) {
       return [true, "Stake is paused"];
     }
     if (walletNotConnected) {
-      return [false, "Connect Wallet"];
-    }
-    if (isWrongMetaMaskNetwork) {
-      return [
-        false,
-        `Wrong network, click to change into ${getEthereumChainName()}`,
-        true,
-      ];
+      return [false, "Connect Wallet", true];
     }
     if (
       !stakeAmount ||
@@ -142,8 +116,7 @@ export const LsdTokenStake = () => {
     }
 
     if (
-      Number(stakeAmount) +
-        (isNaN(Number(estimateFee)) ? 0 : Number(estimateFee) * 1.4) >
+      Number(stakeAmount) + (isNaN(Number(txFee)) ? 0 : Number(txFee) * 1.4) >
       Number(balance)
     ) {
       return [true, `Not Enough ${getTokenName()} to Stake`];
@@ -151,11 +124,10 @@ export const LsdTokenStake = () => {
 
     return [false, "Stake"];
   }, [
-    isWrongMetaMaskNetwork,
     balance,
     stakeAmount,
     walletNotConnected,
-    estimateFee,
+    txFee,
     ethMinimumDeposit,
     depositEnabled,
   ]);
@@ -172,40 +144,16 @@ export const LsdTokenStake = () => {
   }, [lsdBalance, lsdEthRate, stakeAmount]);
 
   const clickConnectWallet = async () => {
-    if (isWrongMetaMaskNetwork) {
-      await (switchNetworkAsync && switchNetworkAsync(getEthereumChainId()));
-    } else {
-      const metamaskConnector = connectors.find((c) => c.name === "MetaMask");
-      if (!metamaskConnector) {
-        return;
-      }
-      try {
-        dispatch(setMetaMaskDisconnected(false));
-
-        await connectAsync({
-          chainId: getEthereumChainId(),
-          connector: metamaskConnector,
-        });
-      } catch (err: any) {
-        if (err.code === 4001) {
-        } else {
-          console.error(err);
-        }
-      }
-    }
+    walletModal.setVisible(true);
   };
 
   const clickMax = () => {
-    if (
-      isWrongMetaMaskNetwork ||
-      walletNotConnected ||
-      isNaN(Number(balance))
-    ) {
+    if (walletNotConnected || isNaN(Number(balance))) {
       return;
     }
     let amount = Number(balance);
-    if (isNaN(Number(estimateFee))) return;
-    amount = Math.max(Number(balance) - Number(estimateFee) * 1.5, 0);
+    if (isNaN(Number(txFee))) return;
+    amount = Math.max(Number(balance) - Number(txFee) * 1.5, 0);
 
     if (Number(amount) > 0) {
       setStakeAmount(
@@ -219,23 +167,28 @@ export const LsdTokenStake = () => {
 
   const clickStake = () => {
     // Connect Wallet
-    if (walletNotConnected || isWrongMetaMaskNetwork) {
+    if (walletNotConnected) {
       clickConnectWallet();
       return;
     }
 
+    if (!anchorProgram || !publicKey) {
+      return;
+    }
+
     dispatch(
-      handleEthStake(
+      handleTokenStake(
+        connection,
+        sendTransaction,
+        anchorProgram,
+        publicKey.toString(),
         Number(stakeAmount) + "",
         willReceiveAmount,
         newRTokenBalance,
-        false,
-        (success) => {
-          dispatch(updateEthBalance());
-          if (success) {
-            setStakeAmount("");
-            dispatch(updateLsdEthBalance());
-          }
+        () => {
+          setStakeAmount("");
+          dispatch(setUpdateFlag(dayjs().unix()));
+          dispatch(updateLsdEthBalance());
         }
       )
     );
@@ -343,7 +296,7 @@ export const LsdTokenStake = () => {
                 className="text-color-text2 text-[.16rem]"
                 {...bindHover(ratePopupState)}
               >
-                {formatLargeAmount(willReceiveAmount)} {getLsdEthName()}
+                {formatLargeAmount(willReceiveAmount)} {getLsdTokenName()}
               </div>
               <div
                 className={classNames(

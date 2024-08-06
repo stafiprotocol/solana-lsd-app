@@ -1,7 +1,3 @@
-import {
-  getEthDepositContractAbi,
-  getEthDepositContract,
-} from "config/contract";
 import { useEffect, useState } from "react";
 import { getEthWeb3 } from "utils/web3Utils";
 import { useAppSlice } from "./selector";
@@ -20,19 +16,18 @@ export function useMinimumStakeLimit() {
         return;
       }
       try {
-        const web3 = getEthWeb3();
-        let contract = new web3.eth.Contract(
-          getEthDepositContractAbi(),
-          getEthDepositContract(),
-          {}
-        );
-
-        const minimumDeposit = await contract.methods.minDeposit().call();
-        if (!minimumDeposit) {
-          setMinimumDeposit("0");
-        } else {
-          setMinimumDeposit(Web3.utils.fromWei(minimumDeposit + "", "ether"));
-        }
+        // const web3 = getEthWeb3();
+        // let contract = new web3.eth.Contract(
+        //   getEthDepositContractAbi(),
+        //   getEthDepositContract(),
+        //   {}
+        // );
+        // const minimumDeposit = await contract.methods.minDeposit().call();
+        // if (!minimumDeposit) {
+        //   setMinimumDeposit("0");
+        // } else {
+        //   setMinimumDeposit(Web3.utils.fromWei(minimumDeposit + "", "ether"));
+        // }
       } catch (err: any) {}
     })();
   }, [metaMaskAccount, updateFlag]);
