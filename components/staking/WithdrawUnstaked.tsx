@@ -12,6 +12,8 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useBalance } from "hooks/useBalance";
 import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
+import { setUpdateFlag } from "redux/reducers/AppSlice";
+import dayjs from "dayjs";
 
 interface Props {
   overallAmount: string | undefined;
@@ -58,6 +60,7 @@ export const WithdrawUnstaked = (props: Props) => {
         claimableAmount,
         false,
         () => {
+          dispatch(setUpdateFlag(dayjs().unix()));
           router.replace({
             pathname: router.pathname,
             query: {

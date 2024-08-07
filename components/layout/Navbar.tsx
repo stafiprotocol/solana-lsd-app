@@ -19,7 +19,6 @@ import auditIcon from "public/images/audit.svg";
 import defaultAvatar from "public/images/default_avatar.png";
 import noticeIcon from "public/images/notice.png";
 import { useEffect, useMemo, useState } from "react";
-import { disconnectWallet } from "redux/reducers/WalletSlice";
 import { RootState } from "redux/store";
 import { getAuditList } from "utils/configUtils";
 import { getChainIcon } from "utils/iconUtils";
@@ -57,12 +56,7 @@ const Navbar = () => {
           className={classNames("absolute top-[.11rem] w-[.82rem] h-[.2rem]")}
         ></div>
 
-        <div className={classNames("flex items-center")}>
-          <AuditComponent
-            expand={auditExpand}
-            onExpandChange={setAuditExpand}
-          />
-        </div>
+        <div className={classNames("flex items-center")}></div>
 
         <div className={classNames("flex items-center")}>
           <div className={classNames("ml-[.16rem]")}>
@@ -123,7 +117,7 @@ const Navbar = () => {
 const UserInfo = (props: { auditExpand: boolean }) => {
   const { auditExpand } = props;
   const dispatch = useAppDispatch();
-  const { publicKey } = useWallet();
+  const { publicKey, disconnect } = useWallet();
 
   const { darkMode } = useAppSelector((state: RootState) => {
     return {
@@ -259,7 +253,7 @@ const UserInfo = (props: { auditExpand: boolean }) => {
             className="cursor-pointer flex items-center justify-between"
             onClick={() => {
               addressPopupState.close();
-              dispatch(disconnectWallet());
+              disconnect();
             }}
           >
             <div className="ml-[.12rem] text-color-text1 text-[.16rem]">

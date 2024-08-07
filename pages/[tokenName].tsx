@@ -13,7 +13,7 @@ import { useApr } from "hooks/useApr";
 import { useBalance } from "hooks/useBalance";
 import { useLsdApr } from "hooks/useLsdApr";
 import { useLsdEthRate } from "hooks/useLsdEthRate";
-import { useEthUnclaimedWithdrawls } from "hooks/useUnclaimedWithdrawals";
+import { useUnclaimedWithdrawals } from "hooks/useUnclaimedWithdrawals";
 import { useWalletAccount } from "hooks/useWalletAccount";
 import { GetStaticProps } from "next";
 import Image from "next/image";
@@ -25,8 +25,6 @@ import { openLink } from "utils/commonUtils";
 import {
   IFaqContent,
   IFaqItem,
-  getDetailInfoAudit,
-  getDetailInfoListedIns,
   getFaqList,
   getLsdTokenName,
   getSupportChains,
@@ -51,11 +49,9 @@ const SolPage = () => {
   const router = useRouter();
   const apr = useLsdApr();
 
-  const withdrawInfo = useEthUnclaimedWithdrawls();
+  const withdrawInfo = useUnclaimedWithdrawals();
 
   const { publicKey } = useWallet();
-
-  useEthUnclaimedWithdrawls();
 
   const { lsdBalance } = useBalance();
   const rate = useLsdEthRate();
@@ -230,62 +226,6 @@ const SolPage = () => {
 
             <div className="ml-[.87rem] flex-1">
               <div className="text-[.24rem] text-color-text1">Detail Info</div>
-
-              <div className="mt-[.15rem] bg-color-bg3 rounded-[.12rem] py-[.16rem] px-[.24rem] text-[.14rem]">
-                <div className="flex items-center">
-                  <div className="w-[.22rem] h-[.22rem] relative">
-                    <Image src={auditIcon} alt="audit" layout="fill" />
-                  </div>
-                  <div className="ml-[.06rem] text-color-text1 font-[700]">
-                    Audit
-                  </div>
-                </div>
-
-                <div
-                  className="cursor-pointer mt-[.12rem] text-color-link"
-                  onClick={() => {
-                    openLink(getDetailInfoAudit().link);
-                  }}
-                >
-                  <span className="mr-[.12rem] dark:text-linkDark/50">
-                    Audited By {getDetailInfoAudit().nameList.join(", ")}
-                  </span>
-                  <span className="min-w-[.15rem] min-h-[.15rem]">
-                    <Icomoon icon="share" size=".12rem" />
-                  </span>
-                </div>
-
-                <div
-                  className={classNames(
-                    "mt-[.16rem] items-center",
-                    getDetailInfoListedIns().length > 0 ? "flex" : "hidden"
-                  )}
-                >
-                  <div className="w-[.22rem] h-[.22rem] relative">
-                    <Image src={cooperationIcon} alt="audit" layout="fill" />
-                  </div>
-
-                  <div className="ml-[.06rem] text-color-text1 font-[700]">
-                    Listed In
-                  </div>
-                </div>
-                {getDetailInfoListedIns().map(
-                  (item: { name: string; link: string }) => (
-                    <div
-                      className="cursor-pointer mt-[.12rem] text-color-link"
-                      onClick={() => {
-                        openLink(item.link);
-                      }}
-                      key={item.name}
-                    >
-                      <span className="mr-[.12rem] dark:text-linkDark/50">
-                        {item.name}
-                      </span>
-                      <Icomoon icon="share" size=".12rem" />
-                    </div>
-                  )
-                )}
-              </div>
 
               <div className="mt-[.16rem] bg-color-bg3 rounded-[.12rem] py-[.16rem] px-[.24rem] text-[.14rem]">
                 <div className="text-color-text1 font-[700]">

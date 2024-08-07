@@ -16,14 +16,6 @@ export function getSupportChains() {
   return appConfig.token.supportChains;
 }
 
-export function getDetailInfoListedIns() {
-  return appConfig.detailedInfo.listedIns;
-}
-
-export function getDetailInfoAudit() {
-  return appConfig.detailedInfo.audit;
-}
-
 export interface IFaqContent {
   type: string;
   content: string;

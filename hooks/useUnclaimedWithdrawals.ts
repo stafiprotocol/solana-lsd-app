@@ -14,7 +14,7 @@ import { PublicKey } from "@solana/web3.js";
 import { solanaEpochToHours } from "utils/timeUtils";
 import { WithdrawInfo } from "interfaces/common";
 
-export function useEthUnclaimedWithdrawls() {
+export function useUnclaimedWithdrawals() {
   const { updateFlag } = useAppSlice();
   const { metaMaskAccount } = useWalletAccount();
 
@@ -43,7 +43,7 @@ export function useEthUnclaimedWithdrawls() {
         !!anchorLsdProgram || "",
         publicKey?.toString() || "",
       ],
-      staleTime: 120000,
+      // staleTime: 120000,
       enabled: !!anchorLsdProgram && !!publicKey,
       queryFn: async () => {
         if (!anchorLsdProgram || !publicKey) {
@@ -134,13 +134,13 @@ export function useEthUnclaimedWithdrawls() {
 
           // console.log({ overallWithdrawAmount });
 
-          console.log({
-            avaiableWithdraw: withdrawableAmount + "",
-            overallAmount: overallWithdrawAmount + "",
-            remainingTime:
-              solanaEpochToHours(remainingUnlockEpoch) * 3600 * 1000,
-            ledgerAvaible: true,
-          });
+          // console.log({
+          //   avaiableWithdraw: withdrawableAmount + "",
+          //   overallAmount: overallWithdrawAmount + "",
+          //   remainingTime:
+          //     solanaEpochToHours(remainingUnlockEpoch) * 3600 * 1000,
+          //   ledgerAvaible: true,
+          // });
 
           return {
             overallAmount: overallWithdrawAmount + "",
@@ -157,6 +157,10 @@ export function useEthUnclaimedWithdrawls() {
       },
     }
   );
+
+  useEffect(() => {
+    withdrawInfoResult.refetch();
+  }, [updateFlag]);
 
   return withdrawInfoResult.data;
 }

@@ -13,6 +13,7 @@ import { chainAmountToHuman } from "utils/numberUtils";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { getDefaultApr } from "utils/configUtils";
 import { useConnection } from "@solana/wallet-adapter-react";
+import { isDev } from "config/env";
 
 export function useLsdApr() {
   const dispatch = useAppDispatch();
@@ -44,8 +45,6 @@ export function useLsdApr() {
 
       const currentEpoch = Number(stakeManagerAccount.latestEra.toString());
 
-      console.log({ currentEpoch });
-
       const epochRates = stakeManagerAccount.eraRates;
       if (epochRates.length > eventLength) {
         const beginRate = Number(
@@ -62,24 +61,34 @@ export function useLsdApr() {
 
         const epochInfo = await connection.getEpochInfo();
         const slotsInEpoch = epochInfo.slotsInEpoch;
-        console.log({ slotsInEpoch });
         const beginSlot = slotsInEpoch * beginEpoch;
         const endSlot = slotsInEpoch * endEpoch;
         console.log({ beginSlot });
         console.log({ endSlot });
 
-        const beginBlock = await connection.getBlock(beginSlot);
-        const endBlock = await connection.getBlock(endSlot);
+        const beginBlockTime = await connection
+          .getBlockTime(beginSlot)
+          .catch((err) => {});
+        const endBlockTime = await connection
+          .getBlockTime(endSlot)
+          .catch((err) => {});
 
-        const beginBlockTime = beginBlock?.blockTime || 0;
-        const endBlockTime = beginBlock?.blockTime || 0;
-        console.log({ beginBlock });
-        console.log({ endBlock });
+        console.log({ beginBlockTime });
+        console.log({ endBlockTime });
 
-        apr =
-          (365.25 * 24 * 60 * 60 * (endRate - beginRate)) /
-          beginRate /
-          (endBlockTime - beginBlockTime);
+        let blockTimeDiff = isDev() ? 577700 : 57770;
+        if (beginBlockTime && endBlockTime) {
+          blockTimeDiff = endBlockTime - beginBlockTime;
+        }
+
+        console.log({ beginRate });
+        console.log({ endRate });
+        if (beginRate !== 1 && endRate !== 1) {
+          apr =
+            (365.25 * 24 * 60 * 60 * (endRate - beginRate)) /
+            beginRate /
+            blockTimeDiff;
+        }
       }
 
       return apr;
