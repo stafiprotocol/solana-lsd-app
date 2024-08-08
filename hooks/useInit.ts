@@ -17,11 +17,13 @@ import { useInterval } from "./useInterval";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { setUserAddress } from "redux/reducers/WalletSlice";
 
+declare const window: any;
+
 export function useInit() {
   const dispatch = useAppDispatch();
   const { updateFlag, darkMode } = useAppSlice();
 
-  const { publicKey } = useWallet();
+  const { publicKey, disconnect } = useWallet();
   const userAddress = publicKey?.toString();
 
   useEffect(() => {
@@ -50,4 +52,10 @@ export function useInit() {
   useEffect(() => {
     document.body.style.backgroundColor = darkMode ? "#222C3C" : "#E8EFFD";
   }, [darkMode]);
+
+  useEffect(() => {
+    window.solana?.on("accountChanged", () => {
+      disconnect();
+    });
+  }, []);
 }
