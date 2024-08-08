@@ -8,7 +8,6 @@ import { SettingsDrawer } from "components/drawer/SettingsDrawer";
 import { Icomoon } from "components/icon/Icomoon";
 import { useAppDispatch, useAppSelector } from "hooks/common";
 import { useAppSlice } from "hooks/selector";
-import { useWalletAccount } from "hooks/useWalletAccount";
 import {
   bindPopover,
   bindTrigger,

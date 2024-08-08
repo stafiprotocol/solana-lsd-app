@@ -2,14 +2,15 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import classNames from "classnames";
 import { Icomoon } from "components/icon/Icomoon";
+import { DEFAULT_TX_FEE } from "constants/common";
 import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "hooks/common";
 import { useAppSlice } from "hooks/selector";
 import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
-import { useApr } from "hooks/useApr";
 import { useBalance } from "hooks/useBalance";
 import { useDepositEnabled } from "hooks/useDepositEnabled";
-import { useLsdEthRate } from "hooks/useLsdEthRate";
+import { useLsdApr } from "hooks/useLsdApr";
+import { useLsdRate } from "hooks/useLsdRate";
 import { useMinimumStakeLimit } from "hooks/useMinimumStakeLimit";
 import { usePrice } from "hooks/usePrice";
 import { bindPopover } from "material-ui-popup-state";
@@ -24,18 +25,15 @@ import { RootState } from "redux/store";
 import { getLsdTokenName, getTokenName } from "utils/configUtils";
 import { getTokenIcon } from "utils/iconUtils";
 import { formatLargeAmount, formatNumber } from "utils/numberUtils";
-import Web3 from "web3";
 import { CustomButton } from "../common/CustomButton";
 import { CustomNumberInput } from "../common/CustomNumberInput";
 import { DataLoading } from "../common/DataLoading";
-import { useLsdApr } from "hooks/useLsdApr";
-import { DEFAULT_TX_FEE } from "constants/common";
 
 export const LsdTokenStake = () => {
   const dispatch = useAppDispatch();
   const { darkMode } = useAppSlice();
   const { ethPrice } = usePrice();
-  const lsdEthRate = useLsdEthRate();
+  const lsdEthRate = useLsdRate();
 
   const { lsdBalance } = useBalance();
   const apr = useLsdApr();

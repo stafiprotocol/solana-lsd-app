@@ -48,12 +48,14 @@ export function useBalance() {
         const tokenAccountPubkey = await getSplTokenAccount(
           connection,
           userPublicKey.toString(),
+          // "DRtThFS61F2WhHkT5woKFhNTtiLHDjss3aykKQkmZ7wy",
           solanaPrograms.lsdTokenMint
         );
         if (tokenAccountPubkey) {
           const tokenAccountBalance = await connection.getTokenAccountBalance(
             tokenAccountPubkey.pubkey
           );
+          // console.log(tokenAccountBalance.value);
           if (tokenAccountBalance && tokenAccountBalance.value) {
             balance = tokenAccountBalance.value.uiAmount + "";
           }

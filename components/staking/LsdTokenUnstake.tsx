@@ -1,20 +1,25 @@
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import classNames from "classnames";
 import { Icomoon } from "components/icon/Icomoon";
+import { DEFAULT_TX_FEE } from "constants/common";
+import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "hooks/common";
 import { useAppSlice } from "hooks/selector";
-import { useApr } from "hooks/useApr";
+import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
 import { useBalance } from "hooks/useBalance";
-import { useLsdEthRate } from "hooks/useLsdEthRate";
+import { useLsdApr } from "hooks/useLsdApr";
+import { useLsdRate } from "hooks/useLsdRate";
 import { usePrice } from "hooks/usePrice";
-import { useWalletAccount } from "hooks/useWalletAccount";
 import { bindHover, bindPopover } from "material-ui-popup-state";
 import HoverPopover from "material-ui-popup-state/HoverPopover";
 import { usePopupState } from "material-ui-popup-state/hooks";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-import { handleLsdEthUnstake } from "redux/reducers/EthSlice";
+import { useMemo, useState } from "react";
+import { setUpdateFlag } from "redux/reducers/AppSlice";
 import { updateLsdEthBalance } from "redux/reducers/LstSlice";
+import { handlelsdTokenUnstake } from "redux/reducers/TokenSlice";
 import { RootState } from "redux/store";
 import { openLink } from "utils/commonUtils";
 import {
@@ -23,20 +28,11 @@ import {
   getUnstakeDuration,
   getUnstakeTipLink,
 } from "utils/configUtils";
+import { getLsdTokenIcon } from "utils/iconUtils";
 import { formatLargeAmount, formatNumber } from "utils/numberUtils";
-import Web3 from "web3";
 import { CustomButton } from "../common/CustomButton";
 import { CustomNumberInput } from "../common/CustomNumberInput";
 import { DataLoading } from "../common/DataLoading";
-import { getLsdTokenIcon } from "utils/iconUtils";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
-import { handlelsdTokenUnstake } from "redux/reducers/TokenSlice";
-import { setUpdateFlag } from "redux/reducers/AppSlice";
-import dayjs from "dayjs";
-import { useLsdApr } from "hooks/useLsdApr";
-import { DEFAULT_TX_FEE } from "constants/common";
 
 export const LsdTokenUnstake = () => {
   const router = useRouter();
@@ -48,11 +44,10 @@ export const LsdTokenUnstake = () => {
   const { connection } = useConnection();
   const anchorProgram = useAnchorLsdProgram();
 
-  const { metaMaskAccount, metaMaskChainId } = useWalletAccount();
   const { balance } = useBalance();
   const { ethPrice, lsdEthPrice } = usePrice();
 
-  const lsdEthRate = useLsdEthRate();
+  const lsdEthRate = useLsdRate();
   const apr = useLsdApr();
 
   const { lsdBalance } = useBalance();

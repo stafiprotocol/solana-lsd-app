@@ -9,17 +9,13 @@ import { StakePage } from "components/staking/StakePage";
 import { WithdrawUnstaked } from "components/staking/WithdrawUnstaked";
 import { solanaPrograms } from "config";
 import { getSolanaScanAccountUrl } from "config/explorer";
-import { useApr } from "hooks/useApr";
 import { useBalance } from "hooks/useBalance";
 import { useLsdApr } from "hooks/useLsdApr";
-import { useLsdEthRate } from "hooks/useLsdEthRate";
+import { useLsdRate } from "hooks/useLsdRate";
 import { useUnclaimedWithdrawals } from "hooks/useUnclaimedWithdrawals";
-import { useWalletAccount } from "hooks/useWalletAccount";
 import { GetStaticProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import auditIcon from "public/images/audit.svg";
-import cooperationIcon from "public/images/cooperation.svg";
 import { useMemo } from "react";
 import { openLink } from "utils/commonUtils";
 import {
@@ -31,8 +27,7 @@ import {
   getTokenName,
 } from "utils/configUtils";
 import { getLsdTokenIcon } from "utils/iconUtils";
-import { formatNumber } from "utils/numberUtils";
-import { addLsdEthToMetaMask } from "utils/web3Utils";
+import { formatNumber, getRefinedStakedAmount } from "utils/numberUtils";
 
 export async function getStaticPaths() {
   return {
@@ -54,13 +49,13 @@ const SolPage = () => {
   const { publicKey } = useWallet();
 
   const { lsdBalance } = useBalance();
-  const rate = useLsdEthRate();
+  const rate = useLsdRate();
 
   const stakedEth = useMemo(() => {
     if (isNaN(Number(lsdBalance)) || isNaN(Number(rate))) {
       return "--";
     }
-    return Number(lsdBalance) * Number(rate);
+    return getRefinedStakedAmount(lsdBalance, rate);
   }, [lsdBalance, rate]);
 
   const selectedTab = useMemo(() => {

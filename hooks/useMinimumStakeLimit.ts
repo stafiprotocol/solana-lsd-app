@@ -1,36 +1,35 @@
 import { useEffect, useState } from "react";
-import { getEthWeb3 } from "utils/web3Utils";
 import { useAppSlice } from "./selector";
-import { useWalletAccount } from "./useWalletAccount";
-import Web3 from "web3";
+import { useAnchorLsdProgram } from "./useAnchorLsdProgram";
+import { solanaPrograms } from "config";
+import { chainAmountToHuman } from "utils/numberUtils";
 
 export function useMinimumStakeLimit() {
   const { updateFlag } = useAppSlice();
-  const { metaMaskAccount } = useWalletAccount();
-
   const [minimumDeposit, setMinimumDeposit] = useState<string>();
+
+  const anchorProgram = useAnchorLsdProgram();
 
   useEffect(() => {
     (async () => {
-      if (!metaMaskAccount) {
-        return;
-      }
       try {
-        // const web3 = getEthWeb3();
-        // let contract = new web3.eth.Contract(
-        //   getEthDepositContractAbi(),
-        //   getEthDepositContract(),
-        //   {}
-        // );
-        // const minimumDeposit = await contract.methods.minDeposit().call();
-        // if (!minimumDeposit) {
-        //   setMinimumDeposit("0");
-        // } else {
-        //   setMinimumDeposit(Web3.utils.fromWei(minimumDeposit + "", "ether"));
-        // }
+        if (!anchorProgram) {
+          return;
+        }
+
+        const stakeManagerAccount =
+          await anchorProgram.account.stakeManager.fetch(
+            solanaPrograms.stakeManagerProgramId
+          );
+
+        // console.log({ stakeManagerAccount });
+
+        setMinimumDeposit(
+          chainAmountToHuman(stakeManagerAccount.minStakeAmount.toString())
+        );
       } catch (err: any) {}
     })();
-  }, [metaMaskAccount, updateFlag]);
+  }, [updateFlag, anchorProgram]);
 
   return {
     minimumDeposit,

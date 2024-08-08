@@ -1,31 +1,11 @@
+import { BN, Program } from "@coral-xyz/anchor";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  CANCELLED_MESSAGE,
-  CONNECTION_ERROR_MESSAGE,
-  LOADING_MESSAGE_UNSTAKING,
-  LOADING_MESSAGE_WITHDRAWING,
-  TRANSACTION_FAILED_MESSAGE,
-} from "constants/common";
-import { AppThunk } from "redux/store";
-import { isSolanaCancelError, sleep, uuid } from "utils/commonUtils";
-import snackbarUtil from "utils/snackbarUtils";
-import { getEthWeb3 } from "utils/web3Utils";
-import Web3 from "web3";
-import {
-  addNotice,
-  setStakeLoading,
-  setStakeLoadingParams,
-  setUnstakeLoading,
-  setUnstakeLoadingParams,
-  setWithdrawLoading,
-  setWithdrawLoadingParams,
-  updateStakeLoadingParams,
-  updateUnstakeLoadingParams,
-  updateWithdrawLoadingParams,
-} from "./AppSlice";
-import * as crypto from "crypto";
-import { LsdProgram } from "config/idl/lsd_program";
-import { BN, Program } from "@coral-xyz/anchor";
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import { WalletAdapterProps } from "@solana/wallet-adapter-base";
 import {
   Connection,
   Keypair,
@@ -38,17 +18,34 @@ import {
   TransactionResponse,
 } from "@solana/web3.js";
 import { solanaPrograms } from "config";
+import { getSolanaScanTxUrl } from "config/explorer";
+import { LsdProgram } from "config/idl/lsd_program";
+import {
+  CANCELLED_MESSAGE,
+  LOADING_MESSAGE_UNSTAKING,
+  LOADING_MESSAGE_WITHDRAWING,
+  TRANSACTION_FAILED_MESSAGE,
+} from "constants/common";
+import * as crypto from "crypto";
+import { AppThunk } from "redux/store";
+import { isSolanaCancelError, sleep, uuid } from "utils/commonUtils";
+import { getLsdTokenName, getTokenName } from "utils/configUtils";
+import { LocalNotice } from "utils/noticeUtils";
+import { formatNumber } from "utils/numberUtils";
+import snackbarUtil from "utils/snackbarUtils";
 import { getSplTokenAccount, sendSolanaTransaction } from "utils/solanaUtils";
 import {
-  createAssociatedTokenAccountInstruction,
-  getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
-import { WalletAdapterProps } from "@solana/wallet-adapter-base";
-import { getSolanaScanTxUrl } from "config/explorer";
-import { LocalNotice } from "utils/noticeUtils";
-import { getLsdTokenName, getTokenName } from "utils/configUtils";
-import { formatNumber } from "utils/numberUtils";
+  addNotice,
+  setStakeLoading,
+  setStakeLoadingParams,
+  setUnstakeLoading,
+  setUnstakeLoadingParams,
+  setWithdrawLoading,
+  setWithdrawLoadingParams,
+  updateStakeLoadingParams,
+  updateUnstakeLoadingParams,
+  updateWithdrawLoadingParams,
+} from "./AppSlice";
 
 export interface EthState {
   txLoading: boolean;
@@ -272,22 +269,6 @@ export const handleTokenStake =
     }
   };
 
-export const updateEthLatestBlockTimestamp =
-  (): AppThunk => async (dispatch, getState) => {
-    try {
-      const web3 = getEthWeb3();
-      const blockNumber = await web3.givenProvider.request({
-        method: "eth_blockNumber",
-      });
-      const block = await web3.givenProvider.request({
-        method: "eth_getBlockByNumber",
-        params: [blockNumber, true],
-      });
-      const latestBlockTimestamp = parseInt(block.timestamp, 16);
-      dispatch(setLatestBlockTimestamp(latestBlockTimestamp + ""));
-    } catch (err: unknown) {}
-  };
-
 /**
  * unstake lsd SOL
  */
@@ -307,7 +288,6 @@ export const handlelsdTokenUnstake =
     const noticeUuid = isReTry
       ? getState().app.unstakeLoadingParams?.noticeUuid
       : uuid();
-    const unstakeAmountInWei = Web3.utils.toWei(unstakeAmount);
 
     try {
       dispatch(setUnstakeLoading(true));

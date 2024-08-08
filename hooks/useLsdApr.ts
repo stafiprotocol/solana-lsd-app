@@ -63,8 +63,8 @@ export function useLsdApr() {
         const slotsInEpoch = epochInfo.slotsInEpoch;
         const beginSlot = slotsInEpoch * beginEpoch;
         const endSlot = slotsInEpoch * endEpoch;
-        console.log({ beginSlot });
-        console.log({ endSlot });
+        // console.log({ beginSlot });
+        // console.log({ endSlot });
 
         const beginBlockTime = await connection
           .getBlockTime(beginSlot)
@@ -73,16 +73,16 @@ export function useLsdApr() {
           .getBlockTime(endSlot)
           .catch((err) => {});
 
-        console.log({ beginBlockTime });
-        console.log({ endBlockTime });
+        // console.log({ beginBlockTime });
+        // console.log({ endBlockTime });
 
         let blockTimeDiff = isDev() ? 577700 : 57770;
         if (beginBlockTime && endBlockTime) {
           blockTimeDiff = endBlockTime - beginBlockTime;
         }
 
-        console.log({ beginRate });
-        console.log({ endRate });
+        // console.log({ beginRate });
+        // console.log({ endRate });
         if (beginRate !== 1 && endRate !== 1) {
           apr =
             (365.25 * 24 * 60 * 60 * (endRate - beginRate)) /

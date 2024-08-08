@@ -17,9 +17,6 @@ import { useInterval } from "./useInterval";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { setUserAddress } from "redux/reducers/WalletSlice";
 
-declare const window: { ethereum: any };
-declare const ethereum: any;
-
 export function useInit() {
   const dispatch = useAppDispatch();
   const { updateFlag, darkMode } = useAppSlice();

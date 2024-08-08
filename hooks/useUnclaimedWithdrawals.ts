@@ -1,22 +1,18 @@
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { solanaPrograms } from "config";
+import { WithdrawInfo } from "interfaces/common";
 import { useEffect, useMemo, useState } from "react";
 import { RootState } from "redux/store";
-import { getEthWeb3 } from "utils/web3Utils";
-import Web3 from "web3";
+import { chainAmountToHuman } from "utils/numberUtils";
+import { solanaEpochToHours } from "utils/timeUtils";
 import { useAppSelector } from "./common";
 import { useAppSlice } from "./selector";
-import { useWalletAccount } from "./useWalletAccount";
-import { chainAmountToHuman, formatScientificNumber } from "utils/numberUtils";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useAnchorLsdProgram } from "./useAnchorLsdProgram";
-import { solanaPrograms } from "config";
-import { PublicKey } from "@solana/web3.js";
-import { solanaEpochToHours } from "utils/timeUtils";
-import { WithdrawInfo } from "interfaces/common";
 
 export function useUnclaimedWithdrawals() {
   const { updateFlag } = useAppSlice();
-  const { metaMaskAccount } = useWalletAccount();
 
   const [overallAmount, setOverallAmount] = useState<string>();
   const [claimableAmount, setClaimableAmount] = useState<string>();
@@ -82,7 +78,7 @@ export function useUnclaimedWithdrawals() {
               ],
             }
           );
-          console.log({ accounts });
+          // console.log({ accounts });
 
           let overallWithdrawAmount = 0;
           let withdrawableAmount = 0;

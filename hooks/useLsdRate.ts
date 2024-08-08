@@ -11,7 +11,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useDebouncedEffect } from "./useDebouncedEffect";
 import { chainAmountToHuman } from "utils/numberUtils";
 
-export function useLsdEthRate() {
+export function useLsdRate() {
   const dispatch = useAppDispatch();
   const { updateFlag } = useAppSlice();
 

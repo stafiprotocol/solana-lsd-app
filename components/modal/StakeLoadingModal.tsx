@@ -11,11 +11,11 @@ import {
   setStakeLoadingParams,
   updateStakeLoadingParams,
 } from "redux/reducers/AppSlice";
-import { handleEthStake } from "redux/reducers/EthSlice";
 import { RootState } from "redux/store";
 import { formatNumber } from "utils/numberUtils";
 import { roboto } from "config/font";
 import { getLsdTokenName, getTokenName } from "utils/configUtils";
+import { handleTokenStake } from "redux/reducers/TokenSlice";
 
 export const StakeLoadingModal = () => {
   const dispatch = useAppDispatch();
@@ -70,14 +70,6 @@ export const StakeLoadingModal = () => {
     if (!stakeLoadingParams) {
       return;
     }
-    dispatch(
-      handleEthStake(
-        stakeLoadingParams.amount + "",
-        stakeLoadingParams.willReceiveAmount + "",
-        stakeLoadingParams.newLsdTokenBalance + "",
-        true
-      )
-    );
   };
 
   return (

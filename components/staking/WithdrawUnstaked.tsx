@@ -1,19 +1,16 @@
-import { useEthWithdrawRemainingTime } from "hooks/useWithdrawRemainingTime";
-import { CustomButton } from "../common/CustomButton";
-import { useAppDispatch, useAppSelector } from "hooks/common";
-import { RootState } from "redux/store";
-import { formatNumber } from "utils/numberUtils";
-import { useMemo } from "react";
-import { handleEthWithdraw } from "redux/reducers/EthSlice";
-import { getTokenName } from "utils/configUtils";
-import { useRouter } from "next/router";
-import { handleTokenWithdraw } from "redux/reducers/TokenSlice";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { useBalance } from "hooks/useBalance";
-import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
-import { setUpdateFlag } from "redux/reducers/AppSlice";
 import dayjs from "dayjs";
+import { useAppDispatch, useAppSelector } from "hooks/common";
+import { useAnchorLsdProgram } from "hooks/useAnchorLsdProgram";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
+import { setUpdateFlag } from "redux/reducers/AppSlice";
+import { handleTokenWithdraw } from "redux/reducers/TokenSlice";
+import { RootState } from "redux/store";
+import { getTokenName } from "utils/configUtils";
+import { formatNumber } from "utils/numberUtils";
+import { CustomButton } from "../common/CustomButton";
 
 interface Props {
   overallAmount: string | undefined;

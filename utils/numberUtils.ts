@@ -100,3 +100,20 @@ export function chainAmountToHuman(num: string | number) {
 export function formatScientificNumber(n: number | string) {
   return n.toLocaleString("fullwide", { useGrouping: false });
 }
+
+export function getRefinedStakedAmount(
+  rTokenAmount: string | undefined,
+  rTokenRatio: string | undefined
+): string {
+  if (!rTokenAmount || !rTokenRatio) {
+    return "--";
+  }
+  const stakedAmount = Number(rTokenAmount) * Number(rTokenRatio);
+  const temp = stakedAmount * 1000000;
+  if (temp < 10) {
+    return stakedAmount + "";
+  } else {
+    const result = Math.ceil(temp) / 1000000;
+    return result + "";
+  }
+}

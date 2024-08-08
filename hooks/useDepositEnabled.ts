@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { getEthWeb3 } from "utils/web3Utils";
 import { useAppSlice } from "./selector";
-import Web3 from "web3";
 
 export function useDepositEnabled() {
   const { updateFlag } = useAppSlice();

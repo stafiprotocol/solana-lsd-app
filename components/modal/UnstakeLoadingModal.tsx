@@ -12,7 +12,6 @@ import {
   setUnstakeLoadingParams,
   updateUnstakeLoadingParams,
 } from "redux/reducers/AppSlice";
-import { handleLsdEthUnstake } from "redux/reducers/EthSlice";
 import { RootState } from "redux/store";
 import {
   getLsdTokenName,
@@ -88,15 +87,6 @@ export const UnstakeLoadingModal = () => {
       snackbarUtil.error("Invalid parameters, please retry manually");
       return;
     }
-
-    dispatch(
-      handleLsdEthUnstake(
-        unstakeLoadingParams.amount + "",
-        unstakeLoadingParams.willReceiveAmount + "",
-        unstakeLoadingParams.newLsdTokenBalance + "",
-        true
-      )
-    );
   };
 
   return (
