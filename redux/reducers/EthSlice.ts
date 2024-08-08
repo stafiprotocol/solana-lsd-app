@@ -297,7 +297,7 @@ export const handleLsdEthUnstake =
       //   updateUnstakeLoadingParams({
       //     customMsg: `Please confirm the ${Number(
       //       unstakeAmount
-      //     )} ${getLsdEthName()} unstaking transaction in your MetaMask wallet`,
+      //     )} ${getLsdEthName()} unstaking transaction in your wallet`,
       //   })
       // );
 
@@ -417,7 +417,7 @@ export const handleEthWithdraw =
     //     updateWithdrawLoadingParams({
     //       customMsg: `Please confirm the ${formatNumber(
     //         Number(withdrawAmount)
-    //       )} ${getTokenName()} withdraw transaction in your MetaMask wallet`,
+    //       )} ${getTokenName()} withdraw transaction in your wallet`,
     //     })
     //   );
 

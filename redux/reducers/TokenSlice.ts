@@ -336,7 +336,7 @@ export const handlelsdTokenUnstake =
         updateUnstakeLoadingParams({
           customMsg: `Please confirm the ${Number(
             unstakeAmount
-          )} ${getLsdTokenName()} unstaking transaction in your MetaMask wallet`,
+          )} ${getLsdTokenName()} unstaking transaction in your wallet`,
         })
       );
 
@@ -576,7 +576,7 @@ export const handleTokenWithdraw =
         updateWithdrawLoadingParams({
           customMsg: `Please confirm the ${formatNumber(
             Number(withdrawAmount)
-          )} ${getTokenName()} withdraw transaction in your MetaMask wallet`,
+          )} ${getTokenName()} withdraw transaction in your wallet`,
         })
       );
 
