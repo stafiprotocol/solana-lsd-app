@@ -31,11 +31,11 @@ export function useLsdRate() {
         new PublicKey(solanaPrograms.stakeManagerProgramId)
       );
 
-    console.log({ stakeManagerAccount });
-    console.log(stakeManagerAccount.lsdTokenMint.toString());
+    // console.log({ stakeManagerAccount });
+    // console.log(stakeManagerAccount.lsdTokenMint.toString());
 
     const rate = chainAmountToHuman(stakeManagerAccount.rate.toString());
-    console.log({ rate });
+    // console.log({ rate });
     dispatch(setRate(rate));
   }, [anchorLsdProgram, dispatch, lstRate]);
 
