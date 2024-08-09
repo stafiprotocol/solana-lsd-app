@@ -13,6 +13,7 @@ export function useAnchorLsdProgram() {
     if (!wallet) {
       return undefined;
     }
+    // @ts-ignore
     const provider = new AnchorProvider(connection, wallet, {});
     setProvider(provider);
 
