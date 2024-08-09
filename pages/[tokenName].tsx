@@ -214,7 +214,7 @@ const SolPage = () => {
                 <WithdrawUnstaked
                   overallAmount={withdrawInfo?.overallAmount}
                   claimableAmount={withdrawInfo?.claimableAmount}
-                  remainingTime={withdrawInfo?.remainingTime}
+                  remainingTimeInSeconds={withdrawInfo?.remainingTimeInSeconds}
                 />
               )}
             </div>

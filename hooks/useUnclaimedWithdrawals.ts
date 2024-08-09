@@ -6,10 +6,10 @@ import { WithdrawInfo } from "interfaces/common";
 import { useEffect, useMemo, useState } from "react";
 import { RootState } from "redux/store";
 import { chainAmountToHuman } from "utils/numberUtils";
-import { solanaEpochToHours } from "utils/timeUtils";
 import { useAppSelector } from "./common";
 import { useAppSlice } from "./selector";
 import { useAnchorLsdProgram } from "./useAnchorLsdProgram";
+import { isDev } from "config/env";
 
 export function useUnclaimedWithdrawals() {
   const { updateFlag } = useAppSlice();
@@ -56,6 +56,26 @@ export function useUnclaimedWithdrawals() {
           );
 
           const epochInfo = await connection.getEpochInfo();
+          const slotsInEpoch = epochInfo.slotsInEpoch;
+          const endEpoch = epochInfo.epoch - 1;
+          const endSlot = slotsInEpoch * endEpoch;
+          const beginSlot = endSlot - 1;
+
+          const beginBlockTime = await connection
+            .getBlockTime(beginSlot)
+            .catch((err) => {});
+          const endBlockTime = await connection
+            .getBlockTime(endSlot)
+            .catch((err) => {});
+
+          let blockTimeDiff = isDev() ? 577700 : 57770;
+          if (beginBlockTime && endBlockTime) {
+            blockTimeDiff = endBlockTime - beginBlockTime;
+          }
+          // console.log({ blockTimeDiff });
+          // console.log({ slotsInEpoch });
+
+          const epochSeconds = slotsInEpoch * blockTimeDiff;
 
           const accounts = await connection.getParsedProgramAccounts(
             new PublicKey(solanaPrograms.lsdProgramId),
@@ -130,21 +150,12 @@ export function useUnclaimedWithdrawals() {
 
           // console.log({ overallWithdrawAmount });
 
-          // console.log({
-          //   avaiableWithdraw: withdrawableAmount + "",
-          //   overallAmount: overallWithdrawAmount + "",
-          //   remainingTime:
-          //     solanaEpochToHours(remainingUnlockEpoch) * 3600 * 1000,
-          //   ledgerAvaible: true,
-          // });
-
           return {
             overallAmount: overallWithdrawAmount + "",
             claimableAmount: withdrawableAmount + "",
             willReceiveAmount: "",
             claimableWithdrawals: [],
-            remainingTime:
-              solanaEpochToHours(remainingUnlockEpoch) * 3600 * 1000,
+            remainingTimeInSeconds: epochSeconds * remainingUnlockEpoch,
             // ledgerAvaible: true,
           };
         } catch (err: any) {

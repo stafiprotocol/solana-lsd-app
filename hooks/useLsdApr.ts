@@ -85,7 +85,7 @@ export function useLsdApr() {
         // console.log({ endRate });
         if (beginRate !== 1 && endRate !== 1) {
           apr =
-            (365.25 * 24 * 60 * 60 * (endRate - beginRate)) /
+            (365.25 * 24 * 60 * 60 * (endRate - beginRate) * 100) /
             beginRate /
             blockTimeDiff;
         }

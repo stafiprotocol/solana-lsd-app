@@ -11,15 +11,16 @@ import { RootState } from "redux/store";
 import { getTokenName } from "utils/configUtils";
 import { formatNumber } from "utils/numberUtils";
 import { CustomButton } from "../common/CustomButton";
+import { formatWithdrawRemaingTime } from "utils/timeUtils";
 
 interface Props {
   overallAmount: string | undefined;
   claimableAmount: string | undefined;
-  remainingTime: number | undefined;
+  remainingTimeInSeconds: number | undefined;
 }
 
 export const WithdrawUnstaked = (props: Props) => {
-  const { overallAmount, claimableAmount, remainingTime } = props;
+  const { overallAmount, claimableAmount, remainingTimeInSeconds } = props;
 
   const router = useRouter();
   const { publicKey, sendTransaction } = useWallet();
@@ -41,7 +42,9 @@ export const WithdrawUnstaked = (props: Props) => {
     );
   }, [claimableAmount, withdrawLoading]);
 
-  const remainingDays = Math.ceil((remainingTime || 0) / (24 * 3600 * 1000));
+  const remainingDays = formatWithdrawRemaingTime(
+    (remainingTimeInSeconds || 0) * 1000
+  );
 
   const clickWithdraw = () => {
     if (withdrawDisabled || !publicKey || !anchorProgram || !claimableAmount) {
@@ -77,6 +80,7 @@ export const WithdrawUnstaked = (props: Props) => {
           <div className="text-[.14rem] text-color-text2 opacity-50 font-[500]">
             Overall Amount
           </div>
+
           <div className="ml-[.12rem] text-[.16rem] text-color-text2 font-[500]">
             {formatNumber(overallAmount)} {getTokenName()}
           </div>
@@ -87,7 +91,7 @@ export const WithdrawUnstaked = (props: Props) => {
             Remaining Lock Time
           </div>
           <div className="text-[.16rem] text-color-text2 font-[500] ml-[.12rem]">
-            {remainingDays} D
+            {remainingDays}
           </div>
         </div>
       </div>

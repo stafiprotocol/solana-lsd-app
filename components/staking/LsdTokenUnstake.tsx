@@ -212,12 +212,7 @@ export const LsdTokenUnstake = () => {
 
   return (
     <div>
-      <div
-        className="cursor-pointer h-[.56rem] mt-[.18rem] mx-[.24rem] bg-[#6C86AD14] dark:bg-[#6C86AD50] rounded-[.16rem] flex items-center justify-between pl-[.12rem] pr-[.18rem]"
-        onClick={() => {
-          openLink(getUnstakeTipLink());
-        }}
-      >
+      <div className="h-[.56rem] mt-[.18rem] mx-[.24rem] bg-[#6C86AD14] dark:bg-[#6C86AD50] rounded-[.16rem] flex items-center justify-between pl-[.12rem] pr-[.18rem]">
         <div className="flex items-center">
           <Icomoon icon="tip" size=".2rem" />
 
@@ -227,8 +222,6 @@ export const LsdTokenUnstake = () => {
             After that, withdraw function will open
           </div>
         </div>
-
-        <Icomoon icon="right" color="#6C86AD" size=".11rem" />
       </div>
 
       <div className="h-[1.07rem] mt-[.18rem] pt-[.24rem] mx-[.24rem] bg-color-bgPage rounded-[.3rem]">

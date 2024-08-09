@@ -6,5 +6,5 @@ export interface NavigationItem {
 export interface WithdrawInfo {
   overallAmount: string;
   claimableAmount: string;
-  remainingTime: number;
+  remainingTimeInSeconds: number;
 }
