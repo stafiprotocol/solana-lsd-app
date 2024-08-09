@@ -1492,7 +1492,7 @@
     "@jnwng/walletconnect-solana" "^0.2.0"
     "@solana/wallet-adapter-base" "^0.9.23"
 
-"@solana/wallet-adapter-wallets@0.9.17":
+"@solana/wallet-adapter-wallets@0.19.17":
   version "0.19.17"
   resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-wallets/-/wallet-adapter-wallets-0.19.17.tgz#214e4625a1271833beb48a823730c58f8a37cd14"
   integrity sha512-Pfp+UjdcIb2Dk0CTuuS35f61eE7YsRxHdiuvoW/fmsio/rBisIsZxem57b+CBn4nXbxtK2AcpssIIhbPB39DzQ==
