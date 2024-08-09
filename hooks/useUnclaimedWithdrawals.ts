@@ -59,7 +59,7 @@ export function useUnclaimedWithdrawals() {
           const slotsInEpoch = epochInfo.slotsInEpoch;
           const endEpoch = epochInfo.epoch - 1;
           const endSlot = slotsInEpoch * endEpoch;
-          const beginSlot = endSlot - 1;
+          const beginSlot = endSlot - slotsInEpoch;
 
           const beginBlockTime = await connection
             .getBlockTime(beginSlot)
@@ -75,7 +75,7 @@ export function useUnclaimedWithdrawals() {
           // console.log({ blockTimeDiff });
           // console.log({ slotsInEpoch });
 
-          const epochSeconds = slotsInEpoch * blockTimeDiff;
+          const epochSeconds = blockTimeDiff;
 
           const accounts = await connection.getParsedProgramAccounts(
             new PublicKey(solanaPrograms.lsdProgramId),
@@ -91,8 +91,8 @@ export function useUnclaimedWithdrawals() {
                 {
                   memcmp: {
                     offset: 40,
-                    bytes: publicKey.toString(),
-                    // bytes: "DRtThFS61F2WhHkT5woKFhNTtiLHDjss3aykKQkmZ7wy",
+                    // bytes: publicKey.toString(),
+                    bytes: "2QxMLjmcqMBT8Gy4gb1SmamkNdvDCvGaxyZBeGv6uHHM",
                   },
                 },
               ],
@@ -149,6 +149,9 @@ export function useUnclaimedWithdrawals() {
           await Promise.all(accountRequests);
 
           // console.log({ overallWithdrawAmount });
+
+          // console.log({ remainingUnlockEpoch });
+          // console.log({ epochSeconds });
 
           return {
             overallAmount: overallWithdrawAmount + "",
