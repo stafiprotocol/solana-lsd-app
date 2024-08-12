@@ -123,7 +123,6 @@ export const NoticeItem = (props: {
       let data;
       if (notice.type === "Stake") {
         data = notice.data as NoticeStakeData;
-        console.log("111", data.amount);
         return `Stake ${Number(
           data.amount
         )} ${getTokenName()} from your Wallet to LSD Pool Contract, and receive ${formatNumber(
