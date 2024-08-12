@@ -123,7 +123,8 @@ export const NoticeItem = (props: {
       let data;
       if (notice.type === "Stake") {
         data = notice.data as NoticeStakeData;
-        return `Stake ${formatNumber(
+        console.log("111", data.amount);
+        return `Stake ${Number(
           data.amount
         )} ${getTokenName()} from your Wallet to LSD Pool Contract, and receive ${formatNumber(
           data.willReceiveAmount
@@ -132,20 +133,20 @@ export const NoticeItem = (props: {
       if (notice.type === "Unstake") {
         data = notice.data as NoticeUnstakeData;
         if (!data.needWithdraw) {
-          return `Unstake ${formatNumber(
+          return `Unstake ${Number(
             data.amount
           )} ${getLsdTokenName()} from LSD Pool Contract to your wallet, and receive ${formatNumber(
             data.willReceiveAmount
           )} ${getTokenName()}.`;
         } else {
-          return `Unstake ${formatNumber(
+          return `Unstake ${Number(
             data.amount
           )} ${getLsdTokenName()} from LSD Pool Contract to your wallet.`;
         }
       }
       if (notice.type === "Withdraw" || notice.type === "Validator Withdraw") {
         data = notice.data as NoticeWithdrawData;
-        return `Withdraw ${formatNumber(data.tokenAmount)} ${getTokenName()}.`;
+        return `Withdraw ${Number(data.tokenAmount)} ${getTokenName()}.`;
       }
     } catch (err: unknown) {}
 
