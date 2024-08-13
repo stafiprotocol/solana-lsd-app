@@ -138,7 +138,7 @@ export const handleTokenStake =
 
       const lsdProgramPubkey = new PublicKey(solanaPrograms.lsdProgramId);
       const stakeManagerPubkey = new PublicKey(
-        solanaPrograms.stakeManagerProgramId
+        solanaPrograms.stakeManagerAccountAddress
       );
       const userPubkey = new PublicKey(userAddress);
       const lsdTokenMintPubkey = new PublicKey(solanaPrograms.lsdTokenMint);
@@ -322,7 +322,7 @@ export const handlelsdTokenUnstake =
 
       const lsdProgramPubkey = new PublicKey(solanaPrograms.lsdProgramId);
       const stakeManagerPubkey = new PublicKey(
-        solanaPrograms.stakeManagerProgramId
+        solanaPrograms.stakeManagerAccountAddress
       );
       const userPubkey = new PublicKey(userAddress);
       const lsdTokenMintPubkey = new PublicKey(solanaPrograms.lsdTokenMint);
@@ -562,7 +562,7 @@ export const handleTokenWithdraw =
 
       const stakeManagerAccount =
         await anchorProgram.account.stakeManager.fetch(
-          new PublicKey(solanaPrograms.stakeManagerProgramId)
+          new PublicKey(solanaPrograms.stakeManagerAccountAddress)
         );
 
       const unbondingDuration = Number(
@@ -577,7 +577,7 @@ export const handleTokenWithdraw =
             {
               memcmp: {
                 offset: 8,
-                bytes: solanaPrograms.stakeManagerProgramId,
+                bytes: solanaPrograms.stakeManagerAccountAddress,
               },
             },
             {
@@ -593,7 +593,7 @@ export const handleTokenWithdraw =
       const epochInfo = await connection.getEpochInfo();
       const transaction = new Transaction();
       const stakeManagerPubkey = new PublicKey(
-        solanaPrograms.stakeManagerProgramId
+        solanaPrograms.stakeManagerAccountAddress
       );
       const lsdProgramPubkey = new PublicKey(solanaPrograms.lsdProgramId);
       const [stakePoolPubkey, number] = PublicKey.findProgramAddressSync(

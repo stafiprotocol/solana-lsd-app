@@ -19,7 +19,7 @@ export function useMinimumStakeLimit() {
 
         const stakeManagerAccount =
           await anchorProgram.account.stakeManager.fetch(
-            solanaPrograms.stakeManagerProgramId
+            solanaPrograms.stakeManagerAccountAddress
           );
 
         // console.log({ stakeManagerAccount });

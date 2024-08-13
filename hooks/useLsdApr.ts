@@ -40,7 +40,7 @@ export function useLsdApr() {
 
       const stakeManagerAccount =
         await anchorLsdProgram.account.stakeManager.fetch(
-          new PublicKey(solanaPrograms.stakeManagerProgramId)
+          new PublicKey(solanaPrograms.stakeManagerAccountAddress)
         );
 
       const currentEpoch = Number(stakeManagerAccount.latestEra.toString());

@@ -232,13 +232,13 @@ const SolPage = () => {
                   onClick={() => {
                     openLink(
                       getSolanaScanAccountUrl(
-                        solanaPrograms.stakeManagerProgramId
+                        solanaPrograms.stakeManagerAccountAddress
                       )
                     );
                   }}
                 >
                   <span className="mr-[.12rem] flex-1 break-all leading-normal dark:text-linkDark/50">
-                    {solanaPrograms.stakeManagerProgramId}
+                    {solanaPrograms.stakeManagerAccountAddress}
                   </span>
 
                   <div className="min-w-[.12rem]">

@@ -48,7 +48,7 @@ export function useUnclaimedWithdrawals() {
         try {
           const stakeManagerAccount =
             await anchorLsdProgram.account.stakeManager.fetch(
-              new PublicKey(solanaPrograms.stakeManagerProgramId)
+              new PublicKey(solanaPrograms.stakeManagerAccountAddress)
             );
 
           const unbondingDuration = Number(
@@ -85,7 +85,7 @@ export function useUnclaimedWithdrawals() {
                 {
                   memcmp: {
                     offset: 8,
-                    bytes: solanaPrograms.stakeManagerProgramId,
+                    bytes: solanaPrograms.stakeManagerAccountAddress,
                   },
                 },
                 {

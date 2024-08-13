@@ -28,7 +28,7 @@ export function useLsdRate() {
 
     const stakeManagerAccount =
       await anchorLsdProgram.account.stakeManager.fetch(
-        new PublicKey(solanaPrograms.stakeManagerProgramId)
+        new PublicKey(solanaPrograms.stakeManagerAccountAddress)
       );
 
     // console.log({ stakeManagerAccount });

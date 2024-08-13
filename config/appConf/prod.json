@@ -1,8 +1,8 @@
 {
   "programs": {
     "lsdProgramId": "8ufkkVBM6s52WRnhdF2yUCu1eNPnS123SoVKv8wyBFAp",
-    "stackProgramId": "2gC8NuySDmRF7bjqnnJb9gJYSU4rtwNXqDShYbcgrCBF",
-    "stakeManagerProgramId": "8hYPonc8irWrqxDSks42LBUJYJe4Qsi6RDVkPd9WUUbU",
+    "stackAccountAddress": "2gC8NuySDmRF7bjqnnJb9gJYSU4rtwNXqDShYbcgrCBF",
+    "stakeManagerAccountAddress": "8hYPonc8irWrqxDSks42LBUJYJe4Qsi6RDVkPd9WUUbU",
     "lsdTokenMint": "A218tGrF8fw2LTwvZbvDE5Miviaq7bMMYEYhnerxdYqv"
   },
   "explorer": "https://explorer.solana.com",
