@@ -11,11 +11,17 @@ Solana LSD App is a user interface where users can stake, unstake and get latest
 
 ## Config your app
 
-In normal case you do not need update ABI files, but if you modify the contracts then you probably want to update abi files which are in `config/abi` folder.
+In normal case you do not need update IDL files, but if you modify the LSD program then you will update IDL files in `config/idl` folder.
 
 - Change branding links and text here: `config/appConf/app.json`
-- Set your network contract address on Holesky here: `config/appConf/dev.json`
-- Set your network contract address on Mainnet here: `config/appConf/prod.json`
+- Set your network addresses for development environment here: `config/appConf/dev.json`
+- Set your network addresses for production environment here: `config/appConf/prod.json`
+
+| config | description | example value |
+| ------ | ----------- | --- |
+| lsdProgramId | lsd program ID **provided by 61Lab** | |
+| stakeManagerAccountAddress | stake manager address of the LSD network created by [Stack App](https://stack-app.stafi.io/) | |
+| lsdTokenMint | lsd token mint address of the LSD network created by [Stack App](https://stack-app.stafi.io/) | |
 
 ## Customize theme
 
