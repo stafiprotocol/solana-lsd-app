@@ -17,11 +17,11 @@ In normal case you do not need update IDL files, but if you modify the LSD progr
 - Set your network addresses for development environment here: `config/appConf/dev.json`
 - Set your network addresses for production environment here: `config/appConf/prod.json`
 
-| config | description | example value |
-| ------ | ----------- | --- |
-| lsdProgramId | lsd program ID **provided by 61Lab** | |
-| stakeManagerAccountAddress | stake manager address of the LSD network created by [Stack App](https://stack-app.stafi.io/) | |
-| lsdTokenMint | lsd token mint address of the LSD network created by [Stack App](https://stack-app.stafi.io/) | |
+| config                     | description                                                                                   | example value |
+| -------------------------- | --------------------------------------------------------------------------------------------- | ------------- |
+| lsdProgramId               | lsd program ID **provided by 61Lab**                                                          |               |
+| stakeManagerAccountAddress | stake manager address of the LSD network created by [Stack App](https://stack-app.stafi.io/)  |               |
+| lsdTokenMint               | lsd token mint address of the LSD network created by [Stack App](https://stack-app.stafi.io/) |               |
 
 ## Customize theme
 
@@ -33,4 +33,4 @@ Run `yarn build` or `yarn build:dev` to build your app, the static files will be
 
 ## Other resources
 
-You can find more details here: [lsaas-docs](https://lsaas-docs.stafi.io/docs/developethlsd/ethlsdapp.html)
+You can find more details here: [lsaas-docs](https://docs.stafi.io/lsaas/develop_sol_lsd/lsd_app/)
