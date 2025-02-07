@@ -91,8 +91,8 @@ export function useUnclaimedWithdrawals() {
                 {
                   memcmp: {
                     offset: 40,
-                    // bytes: publicKey.toString(),
-                    bytes: "2QxMLjmcqMBT8Gy4gb1SmamkNdvDCvGaxyZBeGv6uHHM",
+                    bytes: publicKey.toString(),
+                    // bytes: "2QxMLjmcqMBT8Gy4gb1SmamkNdvDCvGaxyZBeGv6uHHM",
                   },
                 },
               ],
