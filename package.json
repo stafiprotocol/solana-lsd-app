@@ -1,5 +1,5 @@
 {
-  "name": "eth-lsd-app",
+  "name": "solana-lsd-app",
   "version": "0.1.0",
   "scripts": {
     "dev": "NEXT_PUBLIC_ENV=dev next dev -p 5009",
