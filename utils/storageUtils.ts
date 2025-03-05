@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import { getTokenName } from "./configUtils";
 
-export const STORAGE_KEY_DARK_MODE = "eth_lsd_dark_mode_v2";
-export const STORAGE_KEY_NOTICE = "eth_lsd_notice_v2";
-export const STORAGE_KEY_UNREAD_NOTICE = "eth_lsd_unread_notice_v2";
-export const STORAGE_KEY_UNBOND_RECORDS = "eth_lsd_unbond_records";
-export const STORAGE_KEY_DISCONNECT_METAMASK = "eth_lsd_disconnect_metamask";
+export const STORAGE_KEY_DARK_MODE = "lsd_dark_mode_v1";
+export const STORAGE_KEY_NOTICE = "lsd_notice_v1";
+export const STORAGE_KEY_UNREAD_NOTICE = "lsd_unread_notice_v1";
+export const STORAGE_KEY_UNBOND_RECORDS = "lsd_unbond_records";
+export const STORAGE_KEY_DISCONNECT_METAMASK = "lsd_disconnect_metamask";
 
 const tokenName = getTokenName();
 
