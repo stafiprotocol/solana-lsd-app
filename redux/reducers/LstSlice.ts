@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "redux/store";
 import { getDefaultApr } from "utils/configUtils";
-import { getSplTokenAccount } from "utils/solanaUtils";
 
 export interface LsdEthState {
   balance: string | undefined; // balance of lsdETH
